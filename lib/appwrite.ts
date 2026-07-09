@@ -2,6 +2,7 @@
 
 import { Client, Account, Databases, Users } from "node-appwrite";
 import { cookies } from "next/headers";
+import { assertServerEnv } from "./env";
 
 export async function createSessionClient() {
   const client = new Client()
@@ -24,6 +25,8 @@ export async function createSessionClient() {
 }
 
 export async function createAdminClient() {
+  assertServerEnv();
+
   const client = new Client()
     .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
     .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!)

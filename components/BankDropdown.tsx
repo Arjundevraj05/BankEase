@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Select,
@@ -18,10 +18,21 @@ export const BankDropdown = ({
   accounts = [],
   setValue,
   otherStyles,
+  value,
 }: BankDropdownProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [selected, setSeclected] = useState(accounts[0]);
+  const [selected, setSeclected] = useState(
+    accounts.find((account) => account.appwriteItemId === value) || accounts[0]
+  );
+
+  useEffect(() => {
+    const account =
+      accounts.find((item) => item.appwriteItemId === value) || accounts[0];
+    if (account) {
+      setSeclected(account);
+    }
+  }, [accounts, value]);
 
   const handleBankChange = (id: string) => {
     const account = accounts.find((account) => account.appwriteItemId === id)!;
@@ -41,19 +52,19 @@ export const BankDropdown = ({
 
   return (
     <Select
-      defaultValue={selected.id}
-      onValueChange={(value) => handleBankChange(value)}
+      value={value || selected?.appwriteItemId}
+      onValueChange={(nextValue) => handleBankChange(nextValue)}
     >
       <SelectTrigger
         className={`flex w-full bg-white gap-3 md:w-[300px] ${otherStyles}`}
       >
         <Image
-          src="icons/credit-card.svg"
+          src="/icons/credit-card.svg"
           width={20}
           height={20}
           alt="account"
         />
-        <p className="line-clamp-1 w-full text-left">{selected.name}</p>
+        <p className="line-clamp-1 w-full text-left">{selected?.name}</p>
       </SelectTrigger>
       <SelectContent
         className={`w-full bg-white md:w-[300px] ${otherStyles}`}

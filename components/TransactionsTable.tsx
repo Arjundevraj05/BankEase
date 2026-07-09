@@ -27,16 +27,26 @@ const CategoryBadge = ({ category }: CategoryBadgeProps) => {
 } 
 
 const TransactionsTable = ({ transactions }: TransactionTableProps) => {
+  if (!transactions?.length) {
+    return (
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-white py-16 text-center">
+        <p className="text-16 font-medium text-gray-700">No transactions yet</p>
+        <p className="mt-1 text-14 text-gray-500">Activity will appear here once your account syncs.</p>
+      </div>
+    );
+  }
+
   return (
+    <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card">
     <Table>
-      <TableHeader className="bg-[#f9fafb]">
-        <TableRow>
-          <TableHead className="px-2">Transaction</TableHead>
-          <TableHead className="px-2">Amount</TableHead>
-          <TableHead className="px-2">Status</TableHead>
-          <TableHead className="px-2">Date</TableHead>
-          <TableHead className="px-2 max-md:hidden">Channel</TableHead>
-          <TableHead className="px-2 max-md:hidden">Category</TableHead>
+      <TableHeader className="bg-gray-50/80">
+        <TableRow className="border-gray-100 hover:bg-transparent">
+          <TableHead className="px-4 text-12 font-semibold uppercase tracking-wide text-gray-500">Transaction</TableHead>
+          <TableHead className="px-4 text-12 font-semibold uppercase tracking-wide text-gray-500">Amount</TableHead>
+          <TableHead className="px-4 text-12 font-semibold uppercase tracking-wide text-gray-500">Status</TableHead>
+          <TableHead className="px-4 text-12 font-semibold uppercase tracking-wide text-gray-500">Date</TableHead>
+          <TableHead className="max-md:hidden px-4 text-12 font-semibold uppercase tracking-wide text-gray-500">Channel</TableHead>
+          <TableHead className="max-md:hidden px-4 text-12 font-semibold uppercase tracking-wide text-gray-500">Category</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -48,36 +58,36 @@ const TransactionsTable = ({ transactions }: TransactionTableProps) => {
           const isCredit = t.type === 'credit';
 
           return (
-            <TableRow key={t.id} className={`${isDebit || amount[0] === '-' ? 'bg-[#FFFBFA]' : 'bg-[#F6FEF9]'} !over:bg-none !border-b-DEFAULT`}>
-              <TableCell className="max-w-[250px] pl-2 pr-10">
+            <TableRow key={t.id} className={`border-gray-50 transition-colors hover:bg-gray-50/50 ${isDebit || amount[0] === '-' ? 'bg-red-50/30' : 'bg-emerald-50/30'}`}>
+              <TableCell className="max-w-[250px] px-4 py-4">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-14 truncate font-semibold text-[#344054]">
+                  <h1 className="text-14 truncate font-semibold text-gray-800">
                     {removeSpecialCharacters(t.name)}
                   </h1>
                 </div>
               </TableCell>
 
-              <TableCell className={`pl-2 pr-10 font-semibold ${
+              <TableCell className={`px-4 py-4 font-semibold ${
                 isDebit || amount[0] === '-' ?
-                  'text-[#f04438]'
-                  : 'text-[#039855]'
+                  'text-red-600'
+                  : 'text-emerald-600'
               }`}>
                 {isDebit ? `-${amount}` : isCredit ? amount : amount}
               </TableCell>
 
-              <TableCell className="pl-2 pr-10">
+              <TableCell className="px-4 py-4">
                 <CategoryBadge category={status} /> 
               </TableCell>
 
-              <TableCell className="min-w-32 pl-2 pr-10">
+              <TableCell className="min-w-32 px-4 py-4 text-gray-600">
                 {formatDateTime(new Date(t.date)).dateTime}
               </TableCell>
 
-              <TableCell className="pl-2 pr-10 capitalize min-w-24">
+              <TableCell className="min-w-24 px-4 py-4 capitalize text-gray-600 max-md:hidden">
                {t.paymentChannel}
               </TableCell>
 
-              <TableCell className="pl-2 pr-10 max-md:hidden">
+              <TableCell className="max-md:hidden px-4 py-4">
                <CategoryBadge category={t.category} /> 
               </TableCell>
             </TableRow>
@@ -85,6 +95,7 @@ const TransactionsTable = ({ transactions }: TransactionTableProps) => {
         })}
       </TableBody>
     </Table>
+    </div>
   )
 }
 

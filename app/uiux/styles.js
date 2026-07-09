@@ -16,8 +16,8 @@ const styles = {
   };
   
   export const layout = {
-    section: `flex md:flex-row flex-col ${styles.paddingY}`,
-    sectionReverse: `flex md:flex-row flex-col-reverse ${styles.paddingY}`,
+    section: `flex flex-col gap-12 md:flex-row md:gap-16`,
+    sectionReverse: `flex flex-col-reverse gap-12 md:flex-row md:gap-16`,
   
     sectionImgReverse: `flex-1 flex ${styles.flexCenter} md:mr-10 mr-0 md:mt-0 mt-10 relative`,
     sectionImg: `flex-1 flex ${styles.flexCenter} md:ml-10 ml-0 md:mt-0 mt-10 relative`,

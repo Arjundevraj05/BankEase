@@ -7,37 +7,39 @@ import Business from '@/components/Business';
 import Billing from '@/components/Billing';
 import CardDeal from '@/components/CardDeal';
 import Testimonials from '@/components/Testimonials';
-import Clients from '@/components/Clients';
-import CTA from '@/components/CTA';
 import Footer2 from '@/components/Footer2';
 import Navbar from '@/components/Navbar';
+import PageGlow from '@/components/PageGlow';
 
-import Image from "next/image";
 const uiux = () => {
   return (
-    <div className="bg-primary w-full overflow-hidden">
-      <div className={`${styles.paddingX} ${styles.flexCenter}`}>
-        <div className={`${styles.boxWidth}`}>
-          <Navbar/>
-        </div>
-      </div>
+    <div className="relative min-h-screen w-full overflow-x-clip bg-primary">
+      <PageGlow variant="landing" />
 
-      <div className={`bg-primary ${styles.flexStart}`}>
-        <div className={`${styles.boxWidth}`}>
-          <Hero/>
+      <div className="relative z-10">
+        <header>
+          <div className={`${styles.paddingX} ${styles.flexCenter}`}>
+            <div className={styles.boxWidth}>
+              <Navbar />
+            </div>
+          </div>
+        </header>
+
+        <div className={`${styles.paddingX} ${styles.flexStart}`}>
+          <div className={styles.boxWidth}>
+            <Hero />
+          </div>
         </div>
-      </div>
-      
-      {/* Add margin to push the Stats section down */}
-      <div className={`bg-primary ${styles.paddingX} ${styles.flexCenter} mt-16`}>
-        <div className={`${styles.boxWidth}`}>
-          <Stats/>
-          <Business/>
-          <Billing/>
-          <CardDeal/>
-          <Testimonials/>
-          <Clients/>
-          <CTA/>
+
+        <div className={`${styles.paddingX} pb-20 pt-8 sm:pb-28`}>
+          <div className={`${styles.boxWidth} mx-auto flex flex-col gap-24 sm:gap-32`}>
+            <Stats />
+            <Business />
+            <Billing />
+            <CardDeal />
+            <Testimonials />
+            <Footer2 />
+          </div>
         </div>
       </div>
     </div>

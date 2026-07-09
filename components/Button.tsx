@@ -1,18 +1,40 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 interface ButtonProps {
   styles?: string;
-  onClick?: () => void; // Optional onClick handler
+  onClick?: () => void;
+  children?: React.ReactNode;
 }
 
-const Button: React.FC<ButtonProps> = ({ styles, onClick }) => (
-  <button
-    type="button"
-    className={`py-4 px-6 sm:w-48 font-poppins font-medium text-[18px] text-white bg-gradient-to-r from-purple-600 via-indigo-500 to-blue-500 rounded-[10px] outline-none hover:opacity-90 transition-opacity duration-300 ${styles}`}
-    onClick={onClick}
-  >
-    Get Started
-  </button>
-);
+const Button: React.FC<ButtonProps> = ({ styles, onClick, children = "Get Started" }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = () => {
+    if (!onClick || isLoading) return;
+    setIsLoading(true);
+    onClick();
+  };
+
+  return (
+    <button
+      type="button"
+      disabled={isLoading}
+      className={`flex items-center justify-center gap-2 rounded-xl bg-brand-gradient py-4 px-6 font-poppins text-[17px] font-semibold text-white shadow-elevated outline-none transition-all duration-300 hover:opacity-95 hover:shadow-lg disabled:cursor-wait disabled:opacity-80 sm:w-48 ${styles}`}
+      onClick={handleClick}
+    >
+      {isLoading ? (
+        <>
+          <Loader2 className="size-5 animate-spin" />
+          Loading...
+        </>
+      ) : (
+        children
+      )}
+    </button>
+  );
+};
 
 export default Button;

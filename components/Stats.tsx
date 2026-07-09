@@ -4,7 +4,7 @@ import styles from "../app/uiux/styles.js";
 import CountUp from 'react-countup';
 
 const Stats = () => (
-  <section className={`${styles.flexCenter} flex-row flex-wrap sm:mb-20 mb-6`}>
+  <section className={`${styles.flexCenter} flex-row flex-wrap`}>
     {stats.map((stat) => {
       // Extract the numeric part from value
       const numValue = parseFloat(stat.value.replace(/[^0-9.]/g, ''));

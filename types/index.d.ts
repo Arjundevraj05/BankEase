@@ -196,6 +196,7 @@ declare interface BankDropdownProps {
   accounts: Account[];
   setValue?: UseFormSetValue<any>;
   otherStyles?: string;
+  value?: string;
 }
 
 declare interface BankTabItemProps {
@@ -211,7 +212,8 @@ declare interface TotalBalanceBoxProps {
 
 declare interface FooterProps {
   user: User;
-  type?: 'mobile' | 'desktop'
+  type?: 'mobile' | 'desktop';
+  className?: string;
 }
 
 declare interface RightSidebarProps {

@@ -18,19 +18,26 @@ const MyBanks = async () => {
           subtext="Effortlessly manage your banking activites."
         />
 
-        <div className="space-y-4">
-          <h2 className="header-2">
+        <div className="space-y-6">
+          <h2 className="text-18 font-poppins font-semibold text-gray-900">
             Your cards
           </h2>
+          {accounts?.data?.length ? (
           <div className="flex flex-wrap gap-6">
-            {accounts && accounts.data.map((a: Account) => (
+            {accounts.data.map((a: Account) => (
               <BankCard 
-                key={accounts.id}
+                key={a.id || a.appwriteItemId}
                 account={a}
                 userName={loggedIn?.firstName}
               />
             ))}
           </div>
+          ) : (
+            <div className="glass-card flex max-w-lg flex-col gap-4 p-8">
+              <p className="text-16 font-medium text-gray-800">No banks linked yet</p>
+              <p className="text-14 text-gray-500">Connect a bank account to see your cards here.</p>
+            </div>
+          )}
         </div>
       </div>
     </section>

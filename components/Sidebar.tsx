@@ -12,66 +12,56 @@ const Sidebar = ({ user }: SiderbarProps) => {
   const pathname = usePathname();
 
   return (
-    <section className="sidebar bg-[#F4F6FC] shadow-lg h-full w-[260px] py-6 px-4">
-      <nav className="flex flex-col gap-6">
-        {/* Logo Section */}
-        <Link href="/" className="mb-12 cursor-pointer flex items-center gap-2">
-          <Image 
+    <section className="sidebar">
+      <nav className="flex flex-col gap-2">
+        <Link href="/" className="sidebar-brand">
+          <Image
             src="/icons/logo.svg"
             width={34}
             height={34}
             alt="BankEase logo"
-            className="size-[24px] max-xl:size-14"
           />
-          <h1 className="text-[24px]  font-ibm-plex-serif font-bold text-black-1">BankEase</h1>
+          <h1 className="sidebar-logo">BankEase</h1>
         </Link>
 
-        {/* Sidebar Links */}
-        {sidebarLinks.map((item) => {
-          const isActive = pathname === item.route || pathname.startsWith(`${item.route}/`);
+        <div className="mt-6 flex flex-col gap-1">
+          {sidebarLinks.map((item) => {
+            const isActive = pathname === item.route || pathname.startsWith(`${item.route}/`);
 
-          return (
-            <Link href={item.route} key={item.label}
-              className={cn(
-                'flex items-center gap-3 px-4 py-3 rounded-md transition-all duration-300', 
-                {
-                  'bg-[#3A3D97] text-white': isActive, // Active link
-                  'hover:bg-[#EDEEF7]': !isActive // Hover background effect
-                }
-              )}
-            >
-              {/* Icon */}
-              <div className="relative w-6 h-6">
-                <Image 
+            return (
+              <Link
+                href={item.route}
+                key={item.label}
+                className={cn('sidebar-link', {
+                  'sidebar-link-active': isActive,
+                })}
+              >
+                <Image
                   src={item.imgURL}
                   alt={item.label}
-                  fill
-                  className={cn('transition-all duration-300', {
-                    'invert-0': isActive, // Active icon brightness
-                    'opacity-60': !isActive // Inactive icon opacity
+                  width={24}
+                  height={24}
+                  className={cn('shrink-0 transition-all duration-200', {
+                    'brightness-0 invert': isActive,
+                    'opacity-60': !isActive,
                   })}
                 />
-              </div>
-              {/* Label */}
-              <p className={cn(
-                "text-[16px] font-semibold transition-all duration-300", 
-                {
-                  "text-white": isActive, // White text when active
-                  "text-[#2E2E5F]": !isActive // Darker text for inactive state
-                }
-              )}>
-                {item.label}
-              </p>
-            </Link>
-          )
-        })}
+                <span className={cn('sidebar-label', {
+                  'sidebar-label-active': isActive,
+                })}>
+                  {item.label}
+                </span>
+              </Link>
+            )
+          })}
+        </div>
 
-        {/* Plaid Link */}
-        <PlaidLink user={user} />
+        <div className="mt-4">
+          <PlaidLink user={user} />
+        </div>
       </nav>
 
-      {/* Footer */}
-      <Footer user={user} className="mt-8" />
+      <Footer user={user} />
     </section>
   )
 }

@@ -7,6 +7,7 @@ import {
   TransferCreateRequest,
   TransferNetwork,
   TransferType,
+  type AccountBase as PlaidAccount,
 } from "plaid";
 
 import { plaidClient } from "../plaid";
@@ -14,6 +15,21 @@ import { parseStringify } from "../utils";
 
 import { getTransactionsByBankId } from "./transaction.action";
 import { getBanks, getBank } from "./user.actions";
+
+const getPlaidAccountForBank = (
+  plaidAccounts: PlaidAccount[],
+  bankAccountId: string
+): PlaidAccount => {
+  const account =
+    plaidAccounts.find((item) => item.account_id === bankAccountId) ??
+    plaidAccounts[0];
+
+  if (!account) {
+    throw new Error("No Plaid account found for this bank.");
+  }
+
+  return account;
+};
 
 // Get multiple bank accounts
 export const getAccounts = async ({ userId }: getAccountsProps) => {
@@ -27,7 +43,10 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
         const accountsResponse = await plaidClient.accountsGet({
           access_token: bank.accessToken,
         });
-        const accountData = accountsResponse.data.accounts[0];
+        const accountData = getPlaidAccountForBank(
+          accountsResponse.data.accounts,
+          bank.accountId
+        );
 
         // get institution info from plaid
         const institution = await getInstitution({
@@ -45,7 +64,7 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
           type: accountData.type as string,
           subtype: accountData.subtype! as string,
           appwriteItemId: bank.$id,
-          sharaebleId: bank.shareableId,
+          shareableId: bank.shareableId,
         };
 
         return account;
@@ -73,7 +92,10 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
     const accountsResponse = await plaidClient.accountsGet({
       access_token: bank.accessToken,
     });
-    const accountData = accountsResponse.data.accounts[0];
+    const accountData = getPlaidAccountForBank(
+      accountsResponse.data.accounts,
+      bank.accountId
+    );
 
     // get transfer transactions from appwrite
     const transferTransactionsData = await getTransactionsByBankId({
@@ -115,7 +137,7 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
     };
 
     // sort transactions by date such that the most recent transaction is first
-      const allTransactions = [...transactions, ...transferTransactions].sort(
+      const allTransactions = [...(transactions || []), ...transferTransactions].sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
 
@@ -162,7 +184,7 @@ export const getTransactions = async ({
 
       const data = response.data;
 
-      transactions = response.data.added.map((transaction) => ({
+      const pageTransactions = data.added.map((transaction) => ({
         id: transaction.transaction_id,
         name: transaction.name,
         paymentChannel: transaction.payment_channel,
@@ -175,11 +197,13 @@ export const getTransactions = async ({
         image: transaction.logo_url,
       }));
 
+      transactions.push(...pageTransactions);
       hasMore = data.has_more;
     }
 
     return parseStringify(transactions);
   } catch (error) {
-    console.error("An error occurred while getting the accounts:", error);
+    console.error("An error occurred while getting the transactions:", error);
+    return parseStringify([]);
   }
 };

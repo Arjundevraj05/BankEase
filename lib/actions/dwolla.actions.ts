@@ -32,6 +32,7 @@ export const createFundingSource = async (
       .post(`customers/${options.customerId}/funding-sources`, {
         name: options.fundingSourceName,
         plaidToken: options.plaidToken,
+        _links: options._links,
       })
       .then((res) => res.headers.get("location"));
   } catch (err) {
@@ -69,6 +70,16 @@ export const createTransfer = async ({
   amount,
 }: TransferParams) => {
   try {
+    if (!sourceFundingSourceUrl || !destinationFundingSourceUrl) {
+      throw new Error("Missing source or destination funding source.");
+    }
+
+    if (sourceFundingSourceUrl === destinationFundingSourceUrl) {
+      throw new Error("Source and destination banks must be different.");
+    }
+
+    const normalizedAmount = Number(amount).toFixed(2);
+
     const requestBody = {
       _links: {
         source: {
@@ -80,7 +91,7 @@ export const createTransfer = async ({
       },
       amount: {
         currency: "USD",
-        value: amount,
+        value: normalizedAmount,
       },
     };
     return await dwollaClient
@@ -88,6 +99,14 @@ export const createTransfer = async ({
       .then((res) => res.headers.get("location"));
   } catch (err) {
     console.error("Transfer fund failed: ", err);
+    const message =
+      (err as { body?: { _embedded?: { errors?: { message?: string }[] }; message?: string }; message?: string })
+        ?.body?._embedded?.errors?.[0]?.message ||
+      (err as { body?: { message?: string }; message?: string })?.body?.message ||
+      (err as { message?: string })?.message ||
+      "Transfer failed";
+
+    return { error: message };
   }
 };
 

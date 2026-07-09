@@ -1,40 +1,23 @@
 import HeaderBox from '@/components/HeaderBox'
+import PlaidLink from '@/components/PlaidLink';
 import RecentTransactions from '@/components/RecentTransactions';
 import RightSidebar from '@/components/RightSidebar';
 import TotalBalanceBox from '@/components/TotalBalanceBox';
 import { getAccount, getAccounts } from '@/lib/actions/bank.actions';
 import { getLoggedInUser } from '@/lib/actions/user.actions';
+import { redirect } from 'next/navigation';
 
 const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
   const currentPage = Number(page as string) || 1;
-  
   const loggedIn = await getLoggedInUser();
-  if (!loggedIn) {
-    console.error('User is not logged in');
-    // You can redirect the user to the login page or show an appropriate message
-    return (
-      <section className="home">
-        <div className="home-content">
-          <header className="home-header">
-            <HeaderBox 
-              type="greeting"
-              title="Welcome"
-              user="Guest"
-              subtext="Please log in to access and manage your account and transactions."
-            />
-          </header>
-        </div>
-      </section>
-    );
-  }
+
+  if (!loggedIn) redirect('/sign-in');
 
   const accounts = await getAccounts({ 
     userId: loggedIn.$id 
   });
 
-  if (!accounts) {
-    console.error('Accounts not found for user:', loggedIn.$id);
-    // Handle the case where accounts are not found
+  if (!accounts || !accounts.data?.length) {
     return (
       <section className="home">
         <div className="home-content">
@@ -43,9 +26,17 @@ const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
               type="greeting"
               title="Welcome"
               user={loggedIn.firstName || 'Guest'}
-              subtext="No accounts found. Please add an account to manage your transactions."
+              subtext="Connect a bank to see your balances, transactions, and shareable transfer ID."
             />
           </header>
+          <div className="mt-6 max-w-md">
+            <div className="glass-card flex flex-col gap-4 p-6">
+              <p className="text-14 text-gray-600">
+                Link a sandbox bank to unlock balances, transactions, and transfers.
+              </p>
+              <PlaidLink user={loggedIn} variant="primary" />
+            </div>
+          </div>
         </div>
       </section>
     );

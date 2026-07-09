@@ -49,7 +49,6 @@ export const feedback = [
       "Money is only a tool. It will take you wherever you wish, but it will not replace you as the driver.",
     name: "Herman Jensen",
     title: "Founder & Leader",
-    img: "/icons/people01.png",
   },
   {
     id: "feedback-2",
@@ -57,7 +56,6 @@ export const feedback = [
       "Money makes your life easier. If you're lucky to have it, you're lucky.",
     name: "Steve Mark",
     title: "Founder & Leader",
-    img: "/icons/people02.png",
   },
   {
     id: "feedback-3",
@@ -65,7 +63,34 @@ export const feedback = [
       "It is usually people in the money business, finance, and international trade that are really rich.",
     name: "Kenn Gallagher",
     title: "Founder & Leader",
-    img: "/icons/people03.png",
+  },
+  {
+    id: "feedback-4",
+    content:
+      "BankEase made it effortless to link accounts and track every transfer in one clean dashboard.",
+    name: "Priya Sharma",
+    title: "Product Manager",
+  },
+  {
+    id: "feedback-5",
+    content:
+      "The sandbox flow is brilliant for demos — our team onboarded two users and tested transfers in minutes.",
+    name: "Daniel Ortiz",
+    title: "Operations Lead",
+  },
+  {
+    id: "feedback-6",
+    content:
+      "Clean UI, fast setup, and the shareable ID feature makes peer-to-peer transfers surprisingly simple.",
+    name: "Emily Chen",
+    title: "Startup Founder",
+  },
+  {
+    id: "feedback-7",
+    content:
+      "We switched from spreadsheets to BankEase and finally have one place for balances and transaction history.",
+    name: "Marcus Webb",
+    title: "Finance Director",
   },
 ];
 
@@ -92,24 +117,24 @@ export const footerLinks = [
     title: "Useful Links",
     links: [
       {
-        name: "Content",
-        link: "https://www.hoobank.com/content/",
+        name: "Home",
+        link: "/uiux",
       },
       {
-        name: "How it Works",
-        link: "https://www.hoobank.com/how-it-works/",
+        name: "Features",
+        link: "/uiux#features",
       },
       {
-        name: "Create",
-        link: "https://www.hoobank.com/create/",
+        name: "Sign In",
+        link: "/sign-in",
       },
       {
-        name: "Explore",
-        link: "https://www.hoobank.com/explore/",
+        name: "Sign Up",
+        link: "/sign-up",
       },
       {
-        name: "Terms & Services",
-        link: "https://www.hoobank.com/terms-and-services/",
+        name: "Dashboard",
+        link: "/",
       },
     ],
   },
@@ -118,23 +143,23 @@ export const footerLinks = [
     links: [
       {
         name: "Help Center",
-        link: "https://www.hoobank.com/help-center/",
+        link: "/sign-in",
       },
       {
         name: "Partners",
-        link: "https://www.hoobank.com/partners/",
+        link: "/uiux#clients",
       },
       {
         name: "Suggestions",
-        link: "https://www.hoobank.com/suggestions/",
+        link: "/uiux#product",
       },
       {
         name: "Blog",
-        link: "https://www.hoobank.com/blog/",
+        link: "/uiux",
       },
       {
         name: "Newsletters",
-        link: "https://www.hoobank.com/newsletters/",
+        link: "/uiux",
       },
     ],
   },
@@ -143,11 +168,11 @@ export const footerLinks = [
     links: [
       {
         name: "Our Partner",
-        link: "https://www.hoobank.com/our-partner/",
+        link: "/uiux#clients",
       },
       {
         name: "Become a Partner",
-        link: "https://www.hoobank.com/become-a-partner/",
+        link: "/sign-up",
       },
     ],
   },
@@ -179,18 +204,18 @@ export const socialMedia = [
 export const clients = [
   {
     id: "client-1",
-    logo: "/icons/airbnb.png",
+    name: "Horizon",
   },
   {
     id: "client-2",
-    logo: "/icons/binance.png",
+    name: "NovaPay",
   },
   {
     id: "client-3",
-    logo: "/icons/coinbase.png",
+    name: "Ledgerly",
   },
   {
     id: "client-4",
-    logo: "/icons/dropbox.png",
+    name: "ClearFunds",
   },
 ];

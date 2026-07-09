@@ -17,16 +17,18 @@ import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { signIn, signUp } from '@/lib/actions/user.actions';
 import PlaidLink from './PlaidLink';
+import LoadingScreen from './LoadingScreen';
+import OnboardingModal from './OnboardingModal';
 
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null); // Error state
+  const [error, setError] = useState<string | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   const formSchema = authFormSchema(type);
 
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,13 +37,12 @@ const AuthForm = ({ type }: { type: string }) => {
     },
   });
 
-  // 2. Define a submit handler.
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    setError(null); // Clear previous errors
+    setError(null);
+    let keepLoading = false;
 
     try {
-      // Sign up with Appwrite & create plaid token
       if (type === 'sign-up') {
         const userData = {
           firstName: data.firstName!,
@@ -57,7 +58,19 @@ const AuthForm = ({ type }: { type: string }) => {
         };
 
         const newUser = await signUp(userData);
-        setUser(newUser); // Set user on successful signup
+
+        if (newUser?.error) {
+          setError(newUser.error);
+          return;
+        }
+
+        if (!newUser) {
+          setError('Sign up failed. Please try again.');
+          return;
+        }
+
+        setUser(newUser);
+        setShowOnboarding(true);
       }
 
       if (type === 'sign-in') {
@@ -66,20 +79,46 @@ const AuthForm = ({ type }: { type: string }) => {
           password: data.password,
         });
 
-        if (response) router.push('/');
+        if (response?.error) {
+          setError(response.error);
+          return;
+        }
+
+        if (response) {
+          keepLoading = true;
+          router.push('/');
+        } else {
+          setError('Invalid email or password.');
+        }
       }
     } catch (err) {
-      setError('There was a problem signing up. Please try again.');
+      setError('There was a problem with authentication. Please try again.');
       console.error(err);
     } finally {
-      setIsLoading(false);
+      if (!keepLoading) {
+        setIsLoading(false);
+      }
     }
   };
 
   return (
     <section className="auth-form">
-      <header className='flex flex-col gap-5 md:gap-8'>
-        <Link href="/" className="cursor-pointer flex items-center gap-1">
+      {isLoading && type === 'sign-in' && (
+        <LoadingScreen
+          title="Signing you in"
+          message="Loading your dashboard..."
+        />
+      )}
+
+      <OnboardingModal
+        open={showOnboarding}
+        onOpenChange={setShowOnboarding}
+        onContinue={() => setShowOnboarding(false)}
+        userName={user?.firstName}
+      />
+
+      <header className='flex flex-col gap-6 md:gap-8'>
+        <Link href="/uiux" className="flex cursor-pointer items-center gap-2">
           <Image 
             src="/icons/logo.svg"
             width={34}
@@ -89,28 +128,26 @@ const AuthForm = ({ type }: { type: string }) => {
           <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">BankEase</h1>
         </Link>
 
-        <div className="flex flex-col gap-1 md:gap-3">
-          <h1 className="text-24 lg:text-36 font-semibold text-gray-900">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-24 font-poppins font-semibold tracking-tight text-gray-900 lg:text-36">
             {user 
-              ? 'Link Account'
+              ? 'Link your bank'
               : type === 'sign-in'
-                ? 'Sign In'
-                : 'Sign Up'
+                ? 'Welcome back'
+                : 'Create your account'
             }
-            <p className="text-16 font-normal text-gray-600">
-              {user 
-                ? 'Link your account to get started'
-                : 'Please enter your details'
-              }
-            </p>  
           </h1>
+          <p className="text-16 text-gray-500">
+            {user 
+              ? 'Connect a demo bank to open your dashboard.'
+              : 'Enter your details to continue.'
+            }
+          </p>
         </div>
       </header>
 
       {user ? (
-        <div className="flex flex-col gap-4">
-          <PlaidLink user={user} variant="primary" />
-        </div>
+        <PlaidLink user={user} variant="primary" />
       ) : (
         <>
           <Form {...form}>
@@ -137,7 +174,7 @@ const AuthForm = ({ type }: { type: string }) => {
               <CustomInput control={form.control} name='email' label="Email" placeholder='Enter your email' />
               <CustomInput control={form.control} name='password' label="Password" placeholder='Enter your password' />
 
-              {error && <p className="text-red-500">{error}</p>} {/* Display error message */}
+              {error && <p className="text-red-500">{error}</p>}
               
               <div className="flex flex-col gap-4">
                 <Button type="submit" disabled={isLoading} className="form-btn">

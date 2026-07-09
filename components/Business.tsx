@@ -4,10 +4,10 @@ import Button from "./Button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-const FeatureCard = ({ icon, title, content, index }: { icon: string, title: string, content: string, index: number }) => (
-  <div className={`flex flex-row p-6 rounded-[20px] ${index !== features.length - 1 ? "mb-6" : "mb-0"} bg-gray-800 hover:shadow-lg transition-shadow duration-300 ease-in-out`}>
-    <div className={`w-[64px] h-[64px] rounded-full flex items-center justify-center bg-blue-700`}>
-      <Image src={icon} alt="feature icon" width={32} height={32} className="object-contain" />
+const FeatureCard = ({ icon, title, content }: { icon: string, title: string, content: string, index: number }) => (
+  <div className="flex flex-row rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-white/10">
+    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-gradient shadow-lg">
+      <Image src={icon} alt="feature icon" width={28} height={28} className="object-contain brightness-0 invert" />
     </div>
     <div className="flex-1 flex flex-col ml-3">
       <h4 className="font-semibold text-white text-[18px] mb-1">
@@ -28,24 +28,21 @@ const Business = () => {
   };
 
   return (
-    <section id="features" className="flex flex-col md:flex-row py-16">
-      <div className="flex-1 flex flex-col justify-center">
+    <section id="features" className="flex flex-col gap-12 md:flex-row md:gap-16">
+      <div className="flex flex-1 flex-col justify-center gap-6">
         <h2 className="font-poppins font-semibold xs:text-[48px] text-[40px] text-white xs:leading-[76.8px] leading-[66.8px] w-full">
           You do the business, <br className="sm:block hidden" /> we’ll handle the money.
         </h2>
-        <p className="font-poppins font-normal text-gray-400 text-[18px] leading-[30.8px] ">
+        <p className="font-poppins text-[18px] font-normal leading-[30.8px] text-gray-400">
           With the right credit card, you can improve your financial life by building credit, earning rewards, and saving money. But with hundreds of credit cards on the market.
         </p>
 
-        <Button
-          styles="mt-10"
-          onClick={handleGetStarted}
-        >
+        <Button styles="mt-2" onClick={handleGetStarted}>
           Get Started
         </Button>
       </div>
 
-      <div className="flex-1 flex flex-col mt-10 md:mt-0">
+      <div className="flex flex-1 flex-col gap-6">
         {features.map((feature, index) => (
           <FeatureCard key={feature.id} {...feature} index={index} />
         ))}
