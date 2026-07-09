@@ -244,11 +244,12 @@
   }
 
   .auth-panel-mesh {
-    @apply absolute inset-0 animate-glow-pulse opacity-80;
+    @apply absolute inset-0 animate-glow-pulse opacity-90;
     background:
-      radial-gradient(ellipse 80% 60% at 20% 45%, rgba(58, 61, 151, 0.22), transparent 70%),
-      radial-gradient(ellipse 70% 50% at 85% 25%, rgba(1, 121, 254, 0.12), transparent 65%),
-      radial-gradient(ellipse 60% 40% at 70% 85%, rgba(99, 102, 241, 0.1), transparent 60%);
+      radial-gradient(ellipse 70% 55% at 12% 18%, rgba(255, 78, 205, 0.22), transparent 68%),
+      radial-gradient(ellipse 55% 35% at 48% 42%, rgba(245, 158, 11, 0.12), transparent 70%),
+      radial-gradient(ellipse 75% 60% at 88% 82%, rgba(124, 58, 237, 0.28), transparent 65%),
+      radial-gradient(ellipse 50% 40% at 72% 35%, rgba(79, 70, 229, 0.12), transparent 70%);
   }
 
   .auth-grid-pattern {
